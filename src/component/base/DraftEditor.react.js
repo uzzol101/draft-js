@@ -593,8 +593,9 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * reconciliation occurs on a version of the DOM that is synchronized with
    * our EditorState.
    */
-  restoreEditorDOM: (scrollPosition?: DraftScrollPosition) => void = (
+  restoreEditorDOM: (scrollPosition?: DraftScrollPosition, mode?: string) => void = (
     scrollPosition?: DraftScrollPosition,
+    mode?: string
   ): void => {
     // Wrap state updates in `flushControlled`. In sync mode, this is
     // effectively a no-op. In async mode, this ensures all updates scheduled
@@ -606,9 +607,16 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
         }),
       );
     } else {
-      this.setState({customKey: this.state.customKey + 1}, () => {
-        this.focus(scrollPosition);
-      });
+      if (mode == 'cut') {
+        this.setState({contentsKey: this.state.contentsKey + 1}, () => {
+          this.focus(scrollPosition);
+        });
+      }
+      if (mode == 'ime') {
+        this.setState({customKey: this.state.customKey + 1}, () => {
+          this.focus(scrollPosition);
+        });
+      }
     }
   };
 

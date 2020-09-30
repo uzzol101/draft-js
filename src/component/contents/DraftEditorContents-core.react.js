@@ -453,8 +453,36 @@ class DraftEditorContents extends React.Component<Props> {
         blocksAsArray.map(block => {
           const key = block.getKey();
          const blockType = block.getType();
+         const customRenderer = blockRendererFn(block);
+         let CustomComponent, customProps, customEditable;
+         if (customRenderer) {
+           CustomComponent = customRenderer.component;
+           customProps = customRenderer.props;
+           customEditable = customRenderer.editable;
+         }
+   
+         const direction = textDirectionality
+           ? textDirectionality
+           : directionMap.get(key);
+         const offsetKey = DraftOffsetKey.encode(key, 0, 0);
+         const componentProps = {
+           contentState: content,
+           block,
+           blockProps: customProps,
+           blockStyleFn,
+           customStyleMap,
+           customStyleFn,
+           decorator,
+           direction,
+           forceSelection,
+           offsetKey,
+           preventScroll,
+           selection,
+           tree: editorState.getBlockTree(key),
+         };
+
           if (blockType == 'atomic') {
-        return <GenericComponent key={key} />
+        return <CustomComponent {...componentProps} key={key} />
        
           } else {
           return <TextComponent block={block}　key={key + this.props.customKey} {...this.props} />

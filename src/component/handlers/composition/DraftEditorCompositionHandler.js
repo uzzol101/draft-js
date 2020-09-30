@@ -233,7 +233,7 @@ const DraftEditorCompositionHandler = {
     );
     const compositionEndSelectionState = documentSelection.selectionState;
 
-    editor.restoreEditorDOM();
+    editor.restoreEditorDOM(undefined, 'ime');
 
     // See:
     // - https://github.com/facebook/draft-js/issues/2093
