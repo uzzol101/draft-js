@@ -68,6 +68,12 @@ const getListItemClasses = (
   });
 };
 
+class GenericComponent extends React.Component {
+
+  
+}
+
+
 /**
  * `DraftEditorContents` is the container component for all block components
  * rendered for a `DraftEditor`. It is optimized to aggressively avoid
@@ -225,6 +231,8 @@ class DraftEditorContents extends React.Component<Props> {
         };
       }
 
+      console.log('element ', Element)
+      
       const child = React.createElement(
         Element,
         childProps,
@@ -240,6 +248,8 @@ class DraftEditorContents extends React.Component<Props> {
         key,
         offsetKey,
       });
+
+      console.log('wrapper template ', wrapperTemplate)
 
       if (wrapperTemplate) {
         currentDepth = block.getDepth();

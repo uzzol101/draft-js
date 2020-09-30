@@ -254,7 +254,7 @@ exports.dev = function dev() {
 
 // Builds everything
 exports.default = gulp.series(
-  exports.check_dependencies,
+  // exports.check_dependencies,
   exports.clean,
   gulp.parallel(exports.modules, exports.flow),
   gulp.parallel(exports.dist, exports.dist_min),
