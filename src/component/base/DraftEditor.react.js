@@ -57,7 +57,7 @@ const handlerMap = {
   render: null,
 };
 
-type State = {contentsKey: number, ...};
+type State = {contentsKey: number, customKey: number, ...};
 
 let didInitODS = false;
 
@@ -254,7 +254,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
     }
 
     // See `restoreEditorDOM()`.
-    this.state = {contentsKey: 0};
+    this.state = {contentsKey: 0, customKey : 0};
   }
 
   /**
@@ -451,6 +451,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
             <DraftEditorContents
               {...editorContentsProps}
               key={'contents' + this.state.contentsKey}
+              customKey={this.state.customKey}
             />
           </div>
         </div>
@@ -605,7 +606,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
         }),
       );
     } else {
-      this.setState({contentsKey: this.state.contentsKey + 1}, () => {
+      this.setState({customKey: this.state.customKey + 1}, () => {
         this.focus(scrollPosition);
       });
     }

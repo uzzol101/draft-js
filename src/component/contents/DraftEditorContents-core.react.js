@@ -68,70 +68,10 @@ const getListItemClasses = (
   });
 };
 
-class GenericComponent extends React.Component {
-
-  
-}
+class TextComponent extends React.Component {
 
 
-/**
- * `DraftEditorContents` is the container component for all block components
- * rendered for a `DraftEditor`. It is optimized to aggressively avoid
- * re-rendering blocks whenever possible.
- *
- * This component is separate from `DraftEditor` because certain props
- * (for instance, ARIA props) must be allowed to update without affecting
- * the contents of the editor.
- */
-class DraftEditorContents extends React.Component<Props> {
-  shouldComponentUpdate(nextProps: Props): boolean {
-    const prevEditorState = this.props.editorState;
-    const nextEditorState = nextProps.editorState;
-
-    const prevDirectionMap = prevEditorState.getDirectionMap();
-    const nextDirectionMap = nextEditorState.getDirectionMap();
-
-    // Text direction has changed for one or more blocks. We must re-render.
-    if (prevDirectionMap !== nextDirectionMap) {
-      return true;
-    }
-
-    const didHaveFocus = prevEditorState.getSelection().getHasFocus();
-    const nowHasFocus = nextEditorState.getSelection().getHasFocus();
-
-    if (didHaveFocus !== nowHasFocus) {
-      return true;
-    }
-
-    const nextNativeContent = nextEditorState.getNativelyRenderedContent();
-
-    const wasComposing = prevEditorState.isInCompositionMode();
-    const nowComposing = nextEditorState.isInCompositionMode();
-
-    // If the state is unchanged or we're currently rendering a natively
-    // rendered state, there's nothing new to be done.
-    if (
-      prevEditorState === nextEditorState ||
-      (nextNativeContent !== null &&
-        nextEditorState.getCurrentContent() === nextNativeContent) ||
-      (wasComposing && nowComposing)
-    ) {
-      return false;
-    }
-
-    const prevContent = prevEditorState.getCurrentContent();
-    const nextContent = nextEditorState.getCurrentContent();
-    const prevDecorator = prevEditorState.getDecorator();
-    const nextDecorator = nextEditorState.getDecorator();
-    return (
-      wasComposing !== nowComposing ||
-      prevContent !== nextContent ||
-      prevDecorator !== nextDecorator ||
-      nextEditorState.mustForceSelection()
-    );
-  }
-
-  render(): React.Node {
+  render() {
     const {
       blockRenderMap,
       blockRendererFn,
@@ -144,6 +84,7 @@ class DraftEditorContents extends React.Component<Props> {
       textDirectionality,
     } = this.props;
 
+
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
     const forceSelection = editorState.mustForceSelection();
@@ -152,12 +93,13 @@ class DraftEditorContents extends React.Component<Props> {
 
     const blocksAsArray = content.getBlocksAsArray();
     const processedBlocks = [];
+    let isFigure = false;
 
     let currentDepth = null;
     let lastWrapperTemplate = null;
 
-    for (let ii = 0; ii < blocksAsArray.length; ii++) {
-      const block = blocksAsArray[ii];
+    // for (let ii = 0; ii < blocksAsArray.length; ii++) {
+      const block =　this.props.block
       const key = block.getKey();
       const blockType = block.getType();
 
@@ -231,16 +173,30 @@ class DraftEditorContents extends React.Component<Props> {
         };
       }
 
-      console.log('element ', Element)
-      
-      const child = React.createElement(
+
+      let child = ''
+
+      if (Element == 'figure') {
+        child = ''
+      } else {
+        child = React.createElement(
         Element,
         childProps,
         /* $FlowFixMe[incompatible-type] (>=0.112.0 site=www,mobile) This
          * comment suppresses an error found when Flow v0.112 was deployed. To
          * see the error delete this comment and run Flow. */
-        <Component {...componentProps} key={key} />,
+        <DraftEditorBlock {...componentProps} key={key} />,
       );
+      }
+      
+      // const child = React.createElement(
+      //   Element,
+      //   childProps,
+      //   /* $FlowFixMe[incompatible-type] (>=0.112.0 site=www,mobile) This
+      //    * comment suppresses an error found when Flow v0.112 was deployed. To
+      //    * see the error delete this comment and run Flow. */
+      //   <Component {...componentProps} key={key} />,
+      // );
 
       processedBlocks.push({
         block: child,
@@ -249,7 +205,6 @@ class DraftEditorContents extends React.Component<Props> {
         offsetKey,
       });
 
-      console.log('wrapper template ', wrapperTemplate)
 
       if (wrapperTemplate) {
         currentDepth = block.getDepth();
@@ -257,37 +212,258 @@ class DraftEditorContents extends React.Component<Props> {
         currentDepth = null;
       }
       lastWrapperTemplate = wrapperTemplate;
-    }
+    // }
 
     // Group contiguous runs of blocks that have the same wrapperTemplate
-    const outputBlocks = [];
-    for (let ii = 0; ii < processedBlocks.length; ) {
-      const info: any = processedBlocks[ii];
-      if (info.wrapperTemplate) {
-        const blocks = [];
-        do {
-          blocks.push(processedBlocks[ii].block);
-          ii++;
-        } while (
-          ii < processedBlocks.length &&
-          processedBlocks[ii].wrapperTemplate === info.wrapperTemplate
-        );
-        const wrapperElement = React.cloneElement(
-          info.wrapperTemplate,
-          {
-            key: info.key + '-wrap',
-            'data-offset-key': info.offsetKey,
-          },
-          blocks,
-        );
-        outputBlocks.push(wrapperElement);
-      } else {
-        outputBlocks.push(info.block);
-        ii++;
-      }
+    // const outputBlocks = [];
+    // for (let ii = 0; ii < processedBlocks.length; ) {
+    //   const info: any = processedBlocks[ii];
+    //   if (info.wrapperTemplate) {
+    //     const blocks = [];
+    //     do {
+    //       blocks.push(processedBlocks[ii].block);
+    //       ii++;
+    //     } while (
+    //       ii < processedBlocks.length &&
+    //       processedBlocks[ii].wrapperTemplate === info.wrapperTemplate
+    //     );
+    //     const wrapperElement = React.cloneElement(
+    //       info.wrapperTemplate,
+    //       {
+    //         key: info.key + '-wrap',
+    //         'data-offset-key': info.offsetKey,
+    //       },
+    //       blocks,
+    //     );
+    //     outputBlocks.push(wrapperElement);
+    //   } else {
+    //     outputBlocks.push(info.block);
+    //     ii++;
+    //   }
+    // }
+
+    // if (this.props.customKey % 2 == 0) {
+    // return <div data-contents="true">{outputBlocks}</div>
+
+    // } else {
+
+    //   return <article data-contents="true">{outputBlocks}</article>;
+    // }
+
+    return child
+
+
+  }
+
+}
+
+
+class GenericComponent extends React.Component {
+  shouldComponentUpdate () {
+    console.log('gen called should update')
+    return false
+  }
+
+  componentDidMount () {
+    console.log('gen mounting')
+  }
+
+  componentWillUnmount () {
+    console.log('I am going to die')
+  }
+
+  componentDidUpdate () {
+    console.log('gen updated')
+  }
+
+  // render () {
+  //   let {DraftEditorBlock, componentProps} = this.props
+
+  //   if (this.props.type == 'atomic') {
+  //     return <MediaCompoennt  />
+  //   } else {
+  //     return <DraftEditorBlock {...componentProps} />
+  //   }
+  // }
+
+  render () {
+    
+    return <figure><video controls src={'https://www.youtube.com/embed/npXG4Q3umxI'}  /></figure>
+      
+
+    
+  }
+
+ }
+
+
+class MediaCompoennt extends React.Component {
+
+  
+
+  shouldComponentUpdate () {
+    console.log('called should update')
+    return false
+  }
+
+  componentDidMount () {
+    console.log('mounting')
+  }
+
+  componentDidUpdate () {
+    console.log('updated')
+  }
+
+  render () {
+    console.log('rendering')
+    // let props = this.props
+    // const entity = props.contentState.getEntity(
+    //   props.block.getEntityAt(0)
+    // );
+    // const {src} = entity.getData();
+    // const type = entity.getType();
+  
+    
+    return (
+      <>
+      return <video controls src={'https://www.youtube.com/embed/npXG4Q3umxI'}  />;
+
+      </>
+    )
+    }
+  
+};
+
+
+/**
+ * `DraftEditorContents` is the container component for all block components
+ * rendered for a `DraftEditor`. It is optimized to aggressively avoid
+ * re-rendering blocks whenever possible.
+ *
+ * This component is separate from `DraftEditor` because certain props
+ * (for instance, ARIA props) must be allowed to update without affecting
+ * the contents of the editor.
+ */
+class DraftEditorContents extends React.Component<Props> {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      count: 0
+    }
+  }
+
+  shouldComponentUpdate(nextProps: Props): boolean {
+    const prevEditorState = this.props.editorState;
+    const nextEditorState = nextProps.editorState;
+
+    const prevCustomKey = this.props.customKey;
+    const nextCustomKey = nextProps.customKey;
+
+    const prevDirectionMap = prevEditorState.getDirectionMap();
+    const nextDirectionMap = nextEditorState.getDirectionMap();
+
+    // Text direction has changed for one or more blocks. We must re-render.
+    if (prevDirectionMap !== nextDirectionMap) {
+      return true;
     }
 
-    return <div data-contents="true">{outputBlocks}</div>;
+    if (prevCustomKey !== nextCustomKey) {
+      console.log('custom key has changed $$$$$$$$$$')
+      
+      return true;
+    }
+
+    const didHaveFocus = prevEditorState.getSelection().getHasFocus();
+    const nowHasFocus = nextEditorState.getSelection().getHasFocus();
+
+    if (didHaveFocus !== nowHasFocus) {
+      return true;
+    }
+
+    const nextNativeContent = nextEditorState.getNativelyRenderedContent();
+
+    const wasComposing = prevEditorState.isInCompositionMode();
+    const nowComposing = nextEditorState.isInCompositionMode();
+
+    // If the state is unchanged or we're currently rendering a natively
+    // rendered state, there's nothing new to be done.
+    if (
+      prevEditorState === nextEditorState ||
+      (nextNativeContent !== null &&
+        nextEditorState.getCurrentContent() === nextNativeContent) ||
+      (wasComposing && nowComposing)
+    ) {
+      return false;
+    }
+
+    const prevContent = prevEditorState.getCurrentContent();
+    const nextContent = nextEditorState.getCurrentContent();
+    const prevDecorator = prevEditorState.getDecorator();
+    const nextDecorator = nextEditorState.getDecorator();
+    return (
+      wasComposing !== nowComposing ||
+      prevContent !== nextContent ||
+      prevDecorator !== nextDecorator ||
+      nextEditorState.mustForceSelection()
+    );
+  }
+
+  componentDidMount () {
+    console.log('********* mounting Content core')
+  }
+
+  render(): React.Node {
+
+    const {
+      blockRenderMap,
+      blockRendererFn,
+      blockStyleFn,
+      customStyleMap,
+      customStyleFn,
+      editorState,
+      editorKey,
+      preventScroll,
+      textDirectionality,
+    } = this.props;
+
+
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const forceSelection = editorState.mustForceSelection();
+    const decorator = editorState.getDecorator();
+    const directionMap = nullthrows(editorState.getDirectionMap());
+
+    const blocksAsArray = content.getBlocksAsArray();
+    const processedBlocks = [];
+    let isFigure = false;
+
+    let currentDepth = null;
+    let lastWrapperTemplate = null;
+
+    // for (let ii = 0; ii < blocksAsArray.length; ii++) {
+    //   const block = blocksAsArray[ii];
+    //   const key = block.getKey();
+    //   const blockType = block.getType();
+  
+    console.log('Block as array ', blocksAsArray)
+   
+    return <div data-contents="true">
+      {
+        blocksAsArray.map(block => {
+          const key = block.getKey();
+         const blockType = block.getType();
+          if (blockType == 'atomic') {
+        return <GenericComponent key={key} />
+       
+          } else {
+          return <TextComponent block={block}　key={key + this.props.customKey} {...this.props} />
+          }
+        })
+      }
+    </div>;
+
+
   }
 }
 
