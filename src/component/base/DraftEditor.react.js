@@ -133,6 +133,12 @@ class UpdateDraftEditorFlags extends React.Component<{
  * state of the editor. See `DraftEditorProps` for details.
  */
 class DraftEditor extends React.Component<DraftEditorProps, State> {
+  static displayName = 'DraftCore'
+
+  static getDerivedStateFromError(error) {
+   console.log('derived error ', error)
+    return { hasError: true };
+  }
   static defaultProps: DraftEditorDefaultProps = {
     ariaDescribedBy: '{{editor_id_placeholder}}',
     blockRenderMap: DefaultDraftBlockRenderMap,
@@ -329,6 +335,12 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
       describedBy.replace('{{editor_id_placeholder}}', placeholderID) ||
       undefined
     );
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log('Error ', error)
+    console.log('Error Info ', errorInfo)
+
   }
 
   render(): React.Node {

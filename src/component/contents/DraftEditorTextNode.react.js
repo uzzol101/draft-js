@@ -67,6 +67,8 @@ type Props = {children: string, ...};
  * editor state.
  */
 class DraftEditorTextNode extends React.Component<Props> {
+  static displayName = 'DraftEditor TextNode'
+
   _forceFlag: boolean;
   _node: ?(HTMLSpanElement | HTMLBRElement);
 

@@ -75,6 +75,9 @@ class DraftEditorLeaf extends React.Component<Props> {
    * text nodes, this would be harder.
    */
 
+  static displayName = 'DraftEditor Leaf'
+
+
   leaf: ?HTMLElement;
 
   _setSelection(): void {

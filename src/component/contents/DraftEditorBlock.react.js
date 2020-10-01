@@ -73,6 +73,9 @@ const isBlockOnSelectionEdge = (
  * appropriate decorator and inline style components.
  */
 class DraftEditorBlock extends React.Component<Props> {
+
+  static displayName = 'DraftEditor Block'
+
   _node: ?HTMLDivElement;
 
   shouldComponentUpdate(nextProps: Props): boolean {
