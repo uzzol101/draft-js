@@ -188,7 +188,6 @@ class DraftEditorContents extends React.Component<Props> {
     }
 
     if (prevCustomKey !== nextCustomKey) {
-      console.log('custom key has changed $$$$$$$$$$')
       
       return true;
     }
@@ -228,9 +227,6 @@ class DraftEditorContents extends React.Component<Props> {
     );
   }
 
-  componentDidMount () {
-    console.log('********* mounting Content core')
-  }
 
   render(): React.Node {
 
