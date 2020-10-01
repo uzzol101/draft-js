@@ -92,14 +92,8 @@ static displayName = 'TextComponent'
     const decorator = editorState.getDecorator();
     const directionMap = nullthrows(editorState.getDirectionMap());
 
-    const blocksAsArray = content.getBlocksAsArray();
-    const processedBlocks = [];
-    let isFigure = false;
+  
 
-    let currentDepth = null;
-    let lastWrapperTemplate = null;
-
-    // for (let ii = 0; ii < blocksAsArray.length; ii++) {
       const block =　this.props.block
       const key = block.getKey();
       const blockType = block.getType();
@@ -134,46 +128,9 @@ static displayName = 'TextComponent'
 
       const configForType =
         blockRenderMap.get(blockType) || blockRenderMap.get('unstyled');
-      const wrapperTemplate = configForType.wrapper;
 
       const Element =
         configForType.element || blockRenderMap.get('unstyled').element;
-
-      // const depth = block.getDepth();
-      // let className = '';
-      // if (blockStyleFn) {
-      //   className = blockStyleFn(block);
-      // }
-
-      // // List items are special snowflakes, since we handle nesting and
-      // // counters manually.
-      // if (Element === 'li') {
-      //   const shouldResetCount =
-      //     lastWrapperTemplate !== wrapperTemplate ||
-      //     currentDepth === null ||
-      //     depth > currentDepth;
-      //   className = joinClasses(
-      //     className,
-      //     getListItemClasses(blockType, depth, shouldResetCount, direction),
-      //   );
-      // }
-
-      // const Component = CustomComponent || DraftEditorBlock;
-      // let childProps = {
-      //   className,
-      //   'data-block': true,
-      //   'data-editor': editorKey,
-      //   'data-offset-key': offsetKey,
-      //   key,
-      // };
-      // if (customEditable !== undefined) {
-      //   childProps = {
-      //     ...childProps,
-      //     contentEditable: customEditable,
-      //     suppressContentEditableWarning: true,
-      //   };
-      // }
-
 
       let child = React.createElement(
         Element,
@@ -183,68 +140,6 @@ static displayName = 'TextComponent'
          * see the error delete this comment and run Flow. */
         <DraftEditorBlock {...componentProps} key={key} />,
       );
-      
-      
-      // const child = React.createElement(
-      //   Element,
-      //   childProps,
-      //   /* $FlowFixMe[incompatible-type] (>=0.112.0 site=www,mobile) This
-      //    * comment suppresses an error found when Flow v0.112 was deployed. To
-      //    * see the error delete this comment and run Flow. */
-      //   <Component {...componentProps} key={key} />,
-      // );
-
-      // processedBlocks.push({
-      //   block: child,
-      //   wrapperTemplate,
-      //   key,
-      //   offsetKey,
-      // });
-
-
-      // if (wrapperTemplate) {
-      //   currentDepth = block.getDepth();
-      // } else {
-      //   currentDepth = null;
-      // }
-      // lastWrapperTemplate = wrapperTemplate;
-    // }
-
-    // Group contiguous runs of blocks that have the same wrapperTemplate
-    // const outputBlocks = [];
-    // for (let ii = 0; ii < processedBlocks.length; ) {
-    //   const info: any = processedBlocks[ii];
-    //   if (info.wrapperTemplate) {
-    //     const blocks = [];
-    //     do {
-    //       blocks.push(processedBlocks[ii].block);
-    //       ii++;
-    //     } while (
-    //       ii < processedBlocks.length &&
-    //       processedBlocks[ii].wrapperTemplate === info.wrapperTemplate
-    //     );
-    //     const wrapperElement = React.cloneElement(
-    //       info.wrapperTemplate,
-    //       {
-    //         key: info.key + '-wrap',
-    //         'data-offset-key': info.offsetKey,
-    //       },
-    //       blocks,
-    //     );
-    //     outputBlocks.push(wrapperElement);
-    //   } else {
-    //     outputBlocks.push(info.block);
-    //     ii++;
-    //   }
-    // }
-
-    // if (this.props.customKey % 2 == 0) {
-    // return <div data-contents="true">{outputBlocks}</div>
-
-    // } else {
-
-    //   return <article data-contents="true">{outputBlocks}</article>;
-    // }
 
     return child
 
@@ -254,81 +149,8 @@ static displayName = 'TextComponent'
 }
 
 
-class GenericComponent extends React.Component {
-  shouldComponentUpdate () {
-    console.log('gen called should update')
-    return false
-  }
-
-  componentDidMount () {
-    console.log('gen mounting')
-  }
-
-  componentWillUnmount () {
-    console.log('I am going to die')
-  }
-
-  componentDidUpdate () {
-    console.log('gen updated')
-  }
-
-  // render () {
-  //   let {DraftEditorBlock, componentProps} = this.props
-
-  //   if (this.props.type == 'atomic') {
-  //     return <MediaCompoennt  />
-  //   } else {
-  //     return <DraftEditorBlock {...componentProps} />
-  //   }
-  // }
-
-  render () {
-    
-    return <figure><video controls src={'https://www.youtube.com/embed/npXG4Q3umxI'}  /></figure>
-      
-
-    
-  }
-
- }
 
 
-class MediaCompoennt extends React.Component {
-
-  
-
-  shouldComponentUpdate () {
-    console.log('called should update')
-    return false
-  }
-
-  componentDidMount () {
-    console.log('mounting')
-  }
-
-  componentDidUpdate () {
-    console.log('updated')
-  }
-
-  render () {
-    console.log('rendering')
-    // let props = this.props
-    // const entity = props.contentState.getEntity(
-    //   props.block.getEntityAt(0)
-    // );
-    // const {src} = entity.getData();
-    // const type = entity.getType();
-  
-    
-    return (
-      <>
-      return <video controls src={'https://www.youtube.com/embed/npXG4Q3umxI'}  />;
-
-      </>
-    )
-    }
-  
-};
 
 
 /**
@@ -432,18 +254,13 @@ class DraftEditorContents extends React.Component<Props> {
     const directionMap = nullthrows(editorState.getDirectionMap());
 
     const blocksAsArray = content.getBlocksAsArray();
-    // const processedBlocks = [];
-    let isFigure = false;
+    
 
     let currentDepth = null;
     let lastWrapperTemplate = null;
 
-    // for (let ii = 0; ii < blocksAsArray.length; ii++) {
-    //   const block = blocksAsArray[ii];
-    //   const key = block.getKey();
-    //   const blockType = block.getType();
   
-    console.log('Block as array ', blocksAsArray)
+  
     let processedBlocks = blocksAsArray.map(block => {
       const key = block.getKey();
      const blockType = block.getType();
@@ -501,7 +318,6 @@ class DraftEditorContents extends React.Component<Props> {
      );
    }
 
-  //  const Component = CustomComponent || DraftEditorBlock;
    let childProps = {
      className,
      'data-block': true,
@@ -517,14 +333,6 @@ class DraftEditorContents extends React.Component<Props> {
      };
    }
 
-
-  //  processedBlocks.push({
-  //    block: child,
-  //    wrapperTemplate,
-  //    key,
-  //    offsetKey,
-  //  });
-
    if (wrapperTemplate) {
      currentDepth = block.getDepth();
    } else {
@@ -536,7 +344,11 @@ class DraftEditorContents extends React.Component<Props> {
      
      if (blockType == 'atomic') {
     return {
-      block: <CustomComponent {...componentProps} key={key} />,
+      block: React.createElement(
+        Element,
+        childProps,
+        <CustomComponent {...componentProps} key={key} />
+      ),
       wrapperTemplate,
       key,
       offsetKey,
