@@ -27,6 +27,7 @@ const getEntityKeyForSelection = require('getEntityKeyForSelection');
 const nullthrows = require('nullthrows');
 
 const isIE = UserAgent.isBrowser('IE');
+const isSafari = UserAgent.isBrowser('Safari')
 
 /**
  * Millisecond delay to allow `compositionstart` to fire again upon
@@ -160,6 +161,15 @@ const DraftEditorCompositionHandler = {
       inCompositionMode: false,
     });
 
+    console.log('*************************')
+    let contentSt = editorState.getCurrentContent()
+    console.log('compo plain text', contentSt.getPlainText())
+
+
+
+    console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+
+
     editor.exitCurrentMode();
 
     if (!mutations.size) {
@@ -189,6 +199,21 @@ const DraftEditorCompositionHandler = {
       const {blockKey, decoratorKey, leafKey} = DraftOffsetKey.decode(
         offsetKey,
       );
+
+      console.log('composed char ======= ', composedChars)
+      console.log('offset key ======= ', offsetKey)
+      console.log('block key ======= ', blockKey)
+      let block = contentSt.getBlockForKey(blockKey)
+      console.log('block ======= ', block)
+      console.log('block text ======= ', block.getText())
+
+
+
+        console.log('is safari ', isSafari)
+      if(isSafari) {
+        composedChars = `${block.getText()}${composedChars}`
+      }
+
 
       const {start, end} = editorState
         .getBlockTree(blockKey)
