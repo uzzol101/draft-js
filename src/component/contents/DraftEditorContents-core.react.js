@@ -344,11 +344,7 @@ class DraftEditorContents extends React.Component<Props> {
      
      if (blockType == 'atomic') {
     return {
-      block: React.createElement(
-        Element,
-        childProps,
-        <CustomComponent {...componentProps} key={key} />
-      ),
+      block: <CustomComponent {...componentProps} key={key} />,
       wrapperTemplate,
       key,
       offsetKey,
