@@ -40,6 +40,7 @@ const isSafari = UserAgent.isBrowser('Safari')
  * sooner than we want.
  */
 const RESOLVE_DELAY = 20;
+let customOffset = 0;
 
 /**
  * A handful of variables used to track the current composition and its
@@ -153,6 +154,8 @@ const DraftEditorCompositionHandler = {
       return;
     }
 
+    customOffset = 0;
+
     const mutations = nullthrows(domObserver).stopAndFlushMutations();
     domObserver = null;
     resolved = true;
@@ -200,24 +203,28 @@ const DraftEditorCompositionHandler = {
         offsetKey,
       );
 
-      console.log('composed char ======= ', composedChars)
-      console.log('offset key ======= ', offsetKey)
-      console.log('block key ======= ', blockKey)
+      
       let block = contentSt.getBlockForKey(blockKey)
-      console.log('block ======= ', block)
-      console.log('block text ======= ', block.getText())
-
-
-
-        console.log('is safari ', isSafari)
+      let blockText = block.getText() || ''
+      let previousAnchorOffset = Array.from(blockText)
+      let offsetLen = previousAnchorOffset.length
+      let currentText = Array.from(composedChars)
+      let currentTextLen = currentText.length
+    
+        console.log('is safari ', isSafari, offsetLen)
       if(isSafari) {
         composedChars = `${block.getText()}${composedChars}`
+        customOffset = currentTextLen + offsetLen
       }
 
 
       const {start, end} = editorState
         .getBlockTree(blockKey)
         .getIn([decoratorKey, 'leaves', leafKey]);
+
+        console.log('anchorOffset ', start)
+        console.log('focusOffset ', end)
+
 
       const replacementRange = editorState.getSelection().merge({
         anchorKey: blockKey,
@@ -256,9 +263,18 @@ const DraftEditorCompositionHandler = {
       editorState,
       getContentEditableContainer(editor),
     );
-    const compositionEndSelectionState = documentSelection.selectionState;
+    let compositionEndSelectionState = documentSelection.selectionState;
+    console.log('composition end selection ', compositionEndSelectionState)
 
     editor.restoreEditorDOM(undefined, 'ime');
+    
+    if(isSafari) {
+      compositionEndSelectionState = compositionEndSelectionState.merge({
+        focusOffset: customOffset,
+        anchorOffset: customOffset,
+      })
+      console.log('updaetd seelction ', compositionEndSelectionState)
+    }
 
     // See:
     // - https://github.com/facebook/draft-js/issues/2093
