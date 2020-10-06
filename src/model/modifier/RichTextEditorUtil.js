@@ -89,11 +89,7 @@ const RichTextEditorUtil: RichTextUtils = {
     );
 
     let contentSt = editorState.getCurrentContent()
-    console.log('get plain text', contentSt.getPlainText())
-    console.log('has test', contentSt.hasText())
-
-
-    console.log('inserting soft new line', contentState)
+    
 
     const newEditorState = EditorState.push(
       editorState,

@@ -164,15 +164,6 @@ const DraftEditorCompositionHandler = {
       inCompositionMode: false,
     });
 
-    console.log('*************************')
-    let contentSt = editorState.getCurrentContent()
-    console.log('compo plain text', contentSt.getPlainText())
-
-
-
-    console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-
-
     editor.exitCurrentMode();
 
     if (!mutations.size) {
@@ -211,7 +202,6 @@ const DraftEditorCompositionHandler = {
       let currentText = Array.from(composedChars)
       let currentTextLen = currentText.length
     
-        console.log('is safari ', isSafari, offsetLen)
       if(isSafari) {
         composedChars = `${block.getText()}${composedChars}`
         customOffset = currentTextLen + offsetLen
@@ -221,10 +211,6 @@ const DraftEditorCompositionHandler = {
       const {start, end} = editorState
         .getBlockTree(blockKey)
         .getIn([decoratorKey, 'leaves', leafKey]);
-
-        console.log('anchorOffset ', start)
-        console.log('focusOffset ', end)
-
 
       const replacementRange = editorState.getSelection().merge({
         anchorKey: blockKey,
@@ -264,7 +250,6 @@ const DraftEditorCompositionHandler = {
       getContentEditableContainer(editor),
     );
     let compositionEndSelectionState = documentSelection.selectionState;
-    console.log('composition end selection ', compositionEndSelectionState)
 
     editor.restoreEditorDOM(undefined, 'ime');
     
@@ -273,7 +258,6 @@ const DraftEditorCompositionHandler = {
         focusOffset: customOffset,
         anchorOffset: customOffset,
       })
-      console.log('updaetd seelction ', compositionEndSelectionState)
     }
 
     // See:
