@@ -163,9 +163,7 @@ const DraftEditorCompositionHandler = {
     let editorState = EditorState.set(editor._latestEditorState, {
       inCompositionMode: false,
     });
-    console.log('editor state ', editorState)
-
-    console.log('mutations ', mutations)
+    
 
     editor.exitCurrentMode();
 
@@ -174,7 +172,6 @@ const DraftEditorCompositionHandler = {
       return;
     }
 
-    console.log('mutations size', mutations.size)
 
     // TODO, check if Facebook still needs this flag or if it could be removed.
     // Since there can be multiple mutations providing a `composedChars` doesn't
@@ -199,7 +196,6 @@ const DraftEditorCompositionHandler = {
         offsetKey,
       );
 
-      console.log('composed char ', composedChars)
       let block = contentState.getBlockForKey(blockKey)
       let blockText = block.getText() || ''
       let previousAnchorOffset = Array.from(blockText)
@@ -208,7 +204,6 @@ const DraftEditorCompositionHandler = {
       let currentTextLen = currentText.length
 
       if (composedChars == 'LCR' || composedChars == 'lcr') {
-        console.log('lcr returning')
         return
       }
     
