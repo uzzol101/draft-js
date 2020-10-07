@@ -202,14 +202,18 @@ const DraftEditorCompositionHandler = {
       let offsetLen = previousAnchorOffset.length
       let currentText = Array.from(composedChars)
       let currentTextLen = currentText.length
+     
+      let  lastChar = [...previousAnchorOffset].pop()
+
 
       if (composedChars == 'LCR' || composedChars == 'lcr') {
         return
       }
     
       if(isSafari) {
-        composedChars = `${block.getText()}${composedChars}`
-        customOffset = currentTextLen + offsetLen
+        
+        composedChars = (lastChar == '\n')? `${block.getText()}${composedChars}` : composedChars
+        customOffset = (lastChar == '\n')? currentTextLen + offsetLen : null
       }
 
 
@@ -258,7 +262,7 @@ const DraftEditorCompositionHandler = {
 
     editor.restoreEditorDOM(undefined, 'ime');
     
-    if(isSafari) {
+    if(isSafari && customOffset) {
       compositionEndSelectionState = compositionEndSelectionState.merge({
         focusOffset: customOffset,
         anchorOffset: customOffset,
